@@ -15,6 +15,24 @@ The complete workflow is fully serverless using Amazon S3 Event Notifications, A
 
 ![Architecture](architecture/architecture.png)
 
+## 🔄 Project Workflow
+
+### Audio Processing Pipeline
+
+1. User uploads an MP3 file using the REST API.
+2. Amazon API Gateway uploads the file to Amazon S3.
+3. Amazon S3 triggers an AWS Lambda function.
+4. Lambda starts an Amazon Transcribe job.
+5. Amazon Transcribe generates a transcript (.json) in the output S3 bucket.
+
+### Text-to-Speech Pipeline
+
+1. User sends text through the REST API.
+2. Amazon API Gateway uploads the text to Amazon S3.
+3. Amazon S3 triggers an AWS Lambda function.
+4. Lambda invokes Amazon Polly.
+5. Amazon Polly generates an MP3 file and stores it in the output S3 bucket.
+
 ##  AWS Services Used
 
 - Amazon API Gateway
