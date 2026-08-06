@@ -1,1 +1,90 @@
 
+import json
+import boto3
+
+# AWS Clients
+polly = boto3.client("polly")
+s3 = boto3.client("s3")
+
+# Output Bucket
+OUTPUT_BUCKET = "polly-output-vaibhav"
+
+
+def lambda_handler(event, context):
+
+    try:
+
+        print("= EVENT =")
+        print(json.dumps(event))
+
+        # -----------------------------
+        # Get Bucket and Object Name
+        # -----------------------------
+        bucket = event["Records"][0]["s3"]["bucket"]["name"]
+        filename = event["Records"][0]["s3"]["object"]["key"]
+
+        print(f"Input Bucket : {bucket}")
+        print(f"Input File   : {filename}")
+
+        # -----------------------------
+        # Read Text File From S3
+        # -----------------------------
+        response = s3.get_object(
+            Bucket=bucket,
+            Key=filename
+        )
+
+        text = response["Body"].read().decode("utf-8")
+
+        print("Text Received:")
+        print(text)
+
+        # -----------------------------
+        # Convert Text To Speech
+        # -----------------------------
+        polly_response = polly.synthesize_speech(
+            Text=text,
+            OutputFormat="mp3",
+            VoiceId="Joanna"
+        )
+
+        audio = polly_response["AudioStream"].read()
+
+        # -----------------------------
+        # Output File Name
+        # -----------------------------
+        output_file = filename.replace(".txt", ".mp3")
+
+        # -----------------------------
+        # Upload MP3 To Output Bucket
+        # -----------------------------
+        s3.put_object(
+            Bucket=OUTPUT_BUCKET,
+            Key=output_file,
+            Body=audio,
+            ContentType="audio/mpeg"
+        )
+
+        print("Audio Uploaded Successfully")
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "Text converted successfully.",
+                "InputBucket": bucket,
+                "OutputBucket": OUTPUT_BUCKET,
+                "OutputFile": output_file
+            })
+        }
+
+    except Exception as e:
+
+        print("ERROR")
+        print(str(e))
+
+        return {
+            "statusCode": 500,
+            "body": json.dumps({
+                "error": str(e)
+            })
+        }
