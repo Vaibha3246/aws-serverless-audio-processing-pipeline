@@ -90,3 +90,47 @@ Body
   "text": "Hello from AWS Serverless!"
 }
 ```
+# IAM Roles Used
+
+This project uses AWS IAM Roles to securely grant permissions to AWS services.
+
+## API Gateway Execution Role
+
+Permissions:
+
+- Amazon S3 PutObject
+
+Purpose:
+
+- Upload audio files to Amazon S3
+- Upload text files to Amazon S3
+
+---
+
+## Lambda (Amazon Transcribe)
+
+Permissions:
+
+- Amazon Transcribe
+- Amazon S3
+- CloudWatch Logs
+
+Purpose:
+
+- Trigger Amazon Transcribe when an audio file is uploaded to Amazon S3.
+- Store the generated transcript in an output S3 bucket.
+
+---
+
+## Lambda (Amazon Polly)
+
+Permissions:
+
+- Amazon Polly
+- Amazon S3
+- CloudWatch Logs
+
+Purpose:
+
+- Generate MP3 audio from uploaded text.
+- Save the generated audio file to Amazon S3.
