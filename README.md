@@ -11,7 +11,9 @@ The application provides REST APIs using Amazon API Gateway to upload audio and 
 
 The complete workflow is fully serverless using Amazon S3 Event Notifications, AWS Lambda, and managed AWS services.
 
----
+## Architecture
+
+![Architecture](architecture/architecture.png)
 
 ##  AWS Services Used
 
