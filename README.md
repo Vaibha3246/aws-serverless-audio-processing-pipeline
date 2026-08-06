@@ -37,3 +37,56 @@ The complete workflow is fully serverless using Amazon S3 Event Notifications, A
 - AWS Lambda Automation
 - API Key Authentication
 - CloudWatch Logging
+
+## 🔐 API Authentication
+
+This API is protected using an Amazon API Gateway API Key.
+
+Clients must include a valid API key in the request header.
+
+### Header
+
+```http
+x-api-key: YOUR_API_KEY
+```
+
+Requests without a valid API key will be rejected with an HTTP 403 Forbidden response.
+
+
+📤 Example Request
+
+For example, to upload an audio file:
+
+### Upload Audio
+
+```http
+PUT /upload/{bucketname}/{filename}
+```
+
+Headers
+
+```http
+x-api-key: YOUR_API_KEY
+Content-Type: audio/mpeg
+```
+
+### Upload Text
+
+```http
+POST /text-to-speech/{bucketname}/{filename}
+```
+
+Headers
+
+```http
+x-api-key: YOUR_API_KEY
+Content-Type: application/json
+```
+
+Body
+
+```json
+{
+  "text": "Hello from AWS Serverless!"
+}
+```
